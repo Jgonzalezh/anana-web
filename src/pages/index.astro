@@ -1,73 +1,37 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import torneo from '../data/torneo.json';
-import equipos from '../data/equipos.json';
-
-const confirmados = equipos.filter(e => e.confirmado);
-const cuposLibres = torneo.cupos_totales - confirmados.length;
 ---
 
 <Layout title="Inicio">
-  <!-- ── HERO ───────────────────────────────────────────────── -->
+  <!-- HERO -->
   <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-    <!-- Fondo: gradiente + trama diagonal dorada -->
     <div class="absolute inset-0 bg-gradient-to-br from-negro via-marino/25 to-negro"></div>
-    <div
-      class="absolute inset-0 opacity-[0.04]"
-      style="background-image: repeating-linear-gradient(45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 55px)"
-    ></div>
-    <!-- Resplandor marino arriba-izquierda -->
+    <div class="absolute inset-0 opacity-[0.04]" style="background-image: repeating-linear-gradient(45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 55px)"></div>
     <div class="absolute top-0 left-0 w-[600px] h-[600px] bg-marino/20 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
-    <!-- Resplandor dorado abajo-derecha -->
     <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-dorado/10 rounded-full blur-[100px] translate-x-1/4 translate-y-1/4"></div>
 
     <div class="relative z-10 text-center px-4 max-w-5xl mx-auto">
       <p class="section-label">Añaña Basketball presenta</p>
-
       <h1 class="font-display leading-none">
         <span class="block text-white" style="font-size: clamp(4rem, 14vw, 10rem); letter-spacing: 0.05em;">TORNEO</span>
         <span class="block text-dorado" style="font-size: clamp(3rem, 12vw, 9rem); letter-spacing: 0.05em;">BENEFICENCIA</span>
       </h1>
+      <p class="text-white/50 text-lg md:text-xl mt-6">Partidos amistosos · {torneo.fecha} · {torneo.lugar}</p>
+      <p class="text-white/35 text-sm mt-3 max-w-lg mx-auto">{torneo.descripcion}</p>
 
-      <p class="text-white/50 text-lg md:text-xl mt-6">
-        3 fines de semana · Santiago · Junio 2026
-      </p>
-
-      <!-- Chips de jornadas -->
-      <div class="flex flex-wrap justify-center gap-3 mt-8">
-        {torneo.jornadas.map(j => (
-          <div class={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${
-            j.estado === 'en_curso'
-              ? 'bg-dorado/15 border-dorado text-dorado'
-              : 'border-white/15 text-white/40'
-          }`}>
-            {j.estado === 'en_curso' && (
-              <span class="w-2 h-2 bg-dorado rounded-full animate-pulse"></span>
-            )}
-            Jornada {j.numero} · {j.fecha}
-          </div>
-        ))}
-      </div>
-
-      <!-- CTAs -->
       <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/inscripcion" class="btn-primary text-lg">
-          INSCRIBE TU EQUIPO
-        </a>
-        <a href="/equipos" class="btn-outline text-lg">
-          Ver equipos
-        </a>
+        <a href="/inscripcion" class="btn-primary text-lg">INSCRIBE TU EQUIPO</a>
+        <a href="/programacion" class="btn-outline text-lg">Ver programación</a>
       </div>
 
-      <!-- Cupos counter -->
       <div class="mt-12 inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-6 py-3">
         <span class="text-white/50 text-sm">Cupos disponibles</span>
-        <span class="font-display text-3xl text-dorado leading-none">{cuposLibres}</span>
-        <span class="text-white/30 text-sm">de {torneo.cupos_totales}</span>
+        <span id="hero-cupos" class="font-display text-3xl text-dorado leading-none">...</span>
+        <span class="text-white/30 text-sm">de 14</span>
       </div>
     </div>
 
-    <!-- Scroll indicator -->
     <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/20">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -75,63 +39,82 @@ const cuposLibres = torneo.cupos_totales - confirmados.length;
     </div>
   </section>
 
-  <!-- ── INFO ───────────────────────────────────────────────── -->
+  <!-- INFO -->
   <section class="max-w-6xl mx-auto px-4 py-20">
     <div class="grid md:grid-cols-3 gap-5">
       <div class="card p-7">
-        <div class="font-display text-5xl text-dorado mb-3 leading-none">3</div>
-        <h3 class="font-semibold text-white text-lg mb-2">Fines de semana</h3>
-        <p class="text-white/45 text-sm leading-relaxed">
-          Junio 2026. Tres jornadas de basketball para recaudar fondos para el equipo.
-        </p>
+        <div class="font-display text-5xl text-dorado mb-3 leading-none">1</div>
+        <h3 class="font-semibold text-white text-lg mb-2">Día completo</h3>
+        <p class="text-white/45 text-sm leading-relaxed">{torneo.fecha}. Una jornada de basketball amistoso para recaudar fondos.</p>
       </div>
       <div class="card p-7">
-        <div class="font-display text-5xl text-dorado mb-3 leading-none">8</div>
-        <h3 class="font-semibold text-white text-lg mb-2">Equipos objetivo</h3>
-        <p class="text-white/45 text-sm leading-relaxed">
-          Formato adaptable: cuadrangulares con final, todos contra todos o amistosos según participantes.
-        </p>
+        <div class="font-display text-5xl text-dorado mb-3 leading-none" id="info-equipos">14</div>
+        <h3 class="font-semibold text-white text-lg mb-2">Equipos</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Partidos amistosos entre los equipos inscritos. ¡Ven a competir y apoyar!</p>
       </div>
       <div class="card p-7">
         <div class="font-display text-5xl text-dorado mb-3 leading-none">#</div>
         <h3 class="font-semibold text-white text-lg mb-2">Beneficencia</h3>
-        <p class="text-white/45 text-sm leading-relaxed">
-          Lo recaudado va directo al equipamiento, cancha y gastos del equipo Añaña Basketball.
-        </p>
+        <p class="text-white/45 text-sm leading-relaxed">Lo recaudado va directo al equipamiento, cancha y gastos del equipo Añaña Basketball.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── EQUIPOS CONFIRMADOS ────────────────────────────────── -->
+  <!-- EQUIPOS CONFIRMADOS -->
   <section class="max-w-6xl mx-auto px-4 pb-20">
     <div class="flex items-end justify-between mb-8 flex-wrap gap-4">
       <div>
         <p class="section-label">Participantes</p>
-        <h2 class="font-display text-4xl md:text-5xl text-white tracking-wide">
-          EQUIPOS <span class="text-dorado">INSCRITOS</span>
-        </h2>
+        <h2 class="font-display text-4xl md:text-5xl text-white tracking-wide">EQUIPOS <span class="text-dorado">INSCRITOS</span></h2>
       </div>
-      <a href="/equipos" class="text-dorado hover:text-dorado-claro text-sm font-medium transition-colors">
-        Ver todos →
-      </a>
+      <a href="/equipos" class="text-dorado hover:text-dorado-claro text-sm font-medium transition-colors">Ver todos →</a>
     </div>
+    <div id="grid-equipos" class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <p class="text-white/30 text-sm col-span-full">Cargando equipos...</p>
+    </div>
+  </section>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      {confirmados.map(equipo => (
-        <div class="card border-dorado/20 p-5 text-center">
-          <div class="w-12 h-12 bg-marino rounded-xl flex items-center justify-center mx-auto mb-3">
-            <span class="font-display text-dorado text-xl leading-none">
-              {equipo.nombre.charAt(0).toUpperCase()}
-            </span>
-          </div>
-          <p class="font-semibold text-white text-sm leading-tight">{equipo.nombre}</p>
-          {equipo.es_organizador && (
-            <span class="inline-block mt-2 text-dorado/60 text-xs">Organizador</span>
-          )}
+  <!-- CTA BANNER -->
+  <section class="relative overflow-hidden bg-gradient-to-r from-marino/40 via-negro to-negro border-y border-dorado/15 py-20">
+    <div class="absolute inset-0 opacity-[0.03]" style="background-image: repeating-linear-gradient(-45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 40px)"></div>
+    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
+      <h2 class="font-display text-5xl md:text-7xl text-white tracking-wide mb-4">¿LISTO PARA <span class="text-dorado">COMPETIR?</span></h2>
+      <p class="text-white/50 mb-8 text-lg max-w-xl mx-auto">Inscribe tu equipo antes de que se agoten los cupos.</p>
+      <a href="/inscripcion" class="btn-primary text-xl">INSCRIBIRSE AHORA</a>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  import { db } from '../lib/firebase.js';
+  import { collection, getDocs } from 'firebase/firestore';
+
+  const CUPOS = 14;
+
+  async function load() {
+    try {
+    const snap = await getDocs(collection(db, 'equipos'));
+    const equipos = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => a.nombre.localeCompare(b.nombre));
+    const confirmados = equipos.filter(e => e.confirmado);
+    const cuposLibres = CUPOS - confirmados.length;
+
+    document.getElementById('hero-cupos').textContent = cuposLibres;
+    document.getElementById('info-equipos').textContent = CUPOS;
+
+    const grid = document.getElementById('grid-equipos');
+    let html = confirmados.map(eq => `
+      <div class="bg-fondo-card border border-dorado/20 rounded-xl hover:border-dorado/30 transition-colors p-5 text-center">
+        <div class="w-12 h-12 bg-marino rounded-xl flex items-center justify-center mx-auto mb-3">
+          <span class="font-display text-dorado text-xl leading-none">${eq.nombre.charAt(0).toUpperCase()}</span>
         </div>
-      ))}
+        <p class="font-semibold text-white text-sm leading-tight">${eq.nombre}</p>
+        ${eq.es_organizador ? '<span class="inline-block mt-2 text-dorado/60 text-xs">Organizador</span>' : ''}
+      </div>
+    `).join('');
 
-      {Array.from({ length: cuposLibres }).map(() => (
+    const cuposShow = Math.min(cuposLibres, 7);
+    for (let i = 0; i < cuposShow; i++) {
+      html += `
         <a href="/inscripcion" class="border border-white/8 border-dashed rounded-xl p-5 text-center hover:border-dorado/30 transition-colors group">
           <div class="w-12 h-12 bg-white/4 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:bg-dorado/8 transition-colors">
             <svg class="w-5 h-5 text-white/15 group-hover:text-dorado/40 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,26 +122,14 @@ const cuposLibres = torneo.cupos_totales - confirmados.length;
             </svg>
           </div>
           <p class="text-white/20 text-xs group-hover:text-dorado/50 transition-colors">Cupo libre</p>
-        </a>
-      ))}
-    </div>
-  </section>
+        </a>`;
+    }
+    grid.innerHTML = html;
+    } catch (err) {
+      document.getElementById('grid-equipos').innerHTML = `<p class="text-red-400 text-sm col-span-full">Error: ${err.message}</p>`;
+      console.error('Firestore error:', err);
+    }
+  }
 
-  <!-- ── CTA BANNER ─────────────────────────────────────────── -->
-  <section class="relative overflow-hidden bg-gradient-to-r from-marino/40 via-negro to-negro border-y border-dorado/15 py-20">
-    <div class="absolute inset-0 opacity-[0.03]"
-      style="background-image: repeating-linear-gradient(-45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 40px)">
-    </div>
-    <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
-      <h2 class="font-display text-5xl md:text-7xl text-white tracking-wide mb-4">
-        ¿LISTO PARA <span class="text-dorado">COMPETIR?</span>
-      </h2>
-      <p class="text-white/50 mb-8 text-lg max-w-xl mx-auto">
-        Inscribe tu equipo antes de que se agoten los cupos. El torneo ya comenzó.
-      </p>
-      <a href="/inscripcion" class="btn-primary text-xl">
-        INSCRIBIRSE AHORA
-      </a>
-    </div>
-  </section>
-</Layout>
+  load();
+</script>

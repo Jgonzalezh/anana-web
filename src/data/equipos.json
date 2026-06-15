@@ -1,10 +1,16 @@
 [
   { "id": "anana", "nombre": "Añaña Basketball", "confirmado": true, "jugadores": 12, "es_organizador": true },
-  { "id": "equipo1", "nombre": "Equipo 1", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo2", "nombre": "Equipo 2", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo3", "nombre": "Equipo 3", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo4", "nombre": "Equipo 4", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo5", "nombre": "Equipo 5", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo6", "nombre": "Equipo 6", "confirmado": true, "jugadores": 10 },
-  { "id": "equipo7", "nombre": "Equipo 7", "confirmado": true, "jugadores": 10 }
+  { "id": "equipo1", "nombre": "Equipo 1", "confirmado": false },
+  { "id": "equipo2", "nombre": "Equipo 2", "confirmado": false },
+  { "id": "equipo3", "nombre": "Equipo 3", "confirmado": false },
+  { "id": "equipo4", "nombre": "Equipo 4", "confirmado": false },
+  { "id": "equipo5", "nombre": "Equipo 5", "confirmado": false },
+  { "id": "equipo6", "nombre": "Equipo 6", "confirmado": false },
+  { "id": "equipo7", "nombre": "Equipo 7", "confirmado": false },
+  { "id": "equipo8", "nombre": "Equipo 8", "confirmado": false },
+  { "id": "equipo9", "nombre": "Equipo 9", "confirmado": false },
+  { "id": "equipo10", "nombre": "Equipo 10", "confirmado": false },
+  { "id": "equipo11", "nombre": "Equipo 11", "confirmado": false },
+  { "id": "equipo12", "nombre": "Equipo 12", "confirmado": false },
+  { "id": "equipo13", "nombre": "Equipo 13", "confirmado": false }
 ]

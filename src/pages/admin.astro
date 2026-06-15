@@ -1,0 +1,330 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Admin">
+  <div class="pt-24 pb-20 max-w-5xl mx-auto px-4">
+    <meta name="robots" content="noindex" />
+
+    <!-- LOGIN -->
+    <div id="login-section" class="max-w-sm mx-auto">
+      <div class="text-center mb-8">
+        <p class="section-label">Panel de administración</p>
+        <h1 class="font-display text-4xl text-white tracking-wide">ADMIN</h1>
+      </div>
+      <form id="login-form" class="card p-6 space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Email</label>
+          <input type="email" id="login-email" required class="input-field" placeholder="tu@email.com" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Contraseña</label>
+          <input type="password" id="login-password" required class="input-field" placeholder="••••••••" />
+        </div>
+        <p id="login-error" class="text-red-400 text-sm hidden"></p>
+        <button type="submit" class="w-full py-3 bg-dorado text-negro font-bold rounded-lg hover:bg-dorado-claro transition-colors">
+          ENTRAR
+        </button>
+      </form>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="admin-section" class="hidden">
+      <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+        <div>
+          <p class="section-label">Panel de administración</p>
+          <h1 class="font-display text-4xl text-white tracking-wide">ADMIN</h1>
+        </div>
+        <button id="btn-logout" class="text-white/40 hover:text-white text-sm transition-colors">Cerrar sesión</button>
+      </div>
+
+      <!-- TABS -->
+      <div class="flex gap-1 mb-8 border-b border-white/10">
+        <button class="tab-btn active" data-tab="equipos">Equipos</button>
+        <button class="tab-btn" data-tab="partidos">Partidos</button>
+      </div>
+
+      <!-- TAB: EQUIPOS -->
+      <div id="tab-equipos" class="tab-content">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+          <h2 class="font-display text-2xl text-white tracking-wide">EQUIPOS</h2>
+          <button id="btn-add-equipo" class="px-4 py-2 bg-dorado text-negro text-sm font-bold rounded hover:bg-dorado-claro transition-colors">
+            + Agregar equipo
+          </button>
+        </div>
+
+        <!-- Form agregar equipo -->
+        <div id="form-equipo" class="card p-5 mb-6 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <input type="text" id="equipo-nombre" placeholder="Nombre del equipo" class="input-field" />
+            <input type="text" id="equipo-contacto" placeholder="Contacto / capitán" class="input-field" />
+            <input type="tel" id="equipo-whatsapp" placeholder="WhatsApp" class="input-field" />
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button id="btn-save-equipo" class="px-4 py-2 bg-dorado text-negro text-sm font-bold rounded hover:bg-dorado-claro transition-colors">
+              Guardar
+            </button>
+            <button id="btn-cancel-equipo" class="px-4 py-2 border border-white/20 text-white/60 text-sm rounded hover:border-white/40 transition-colors">
+              Cancelar
+            </button>
+          </div>
+        </div>
+
+        <div id="lista-equipos" class="space-y-2">
+          <p class="text-white/30 text-sm">Cargando equipos...</p>
+        </div>
+      </div>
+
+      <!-- TAB: PARTIDOS -->
+      <div id="tab-partidos" class="tab-content hidden">
+        <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+          <h2 class="font-display text-2xl text-white tracking-wide">PARTIDOS</h2>
+          <button id="btn-add-partido" class="px-4 py-2 bg-dorado text-negro text-sm font-bold rounded hover:bg-dorado-claro transition-colors">
+            + Agregar partido
+          </button>
+        </div>
+
+        <!-- Form agregar partido -->
+        <div id="form-partido" class="card p-5 mb-6 hidden">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <input type="time" id="partido-hora" class="input-field" value="10:00" />
+            <select id="partido-local" class="input-field"><option value="">Equipo local</option></select>
+            <select id="partido-visitante" class="input-field"><option value="">Equipo visitante</option></select>
+          </div>
+          <div class="flex gap-3 mt-4">
+            <button id="btn-save-partido" class="px-4 py-2 bg-dorado text-negro text-sm font-bold rounded hover:bg-dorado-claro transition-colors">
+              Guardar
+            </button>
+            <button id="btn-cancel-partido" class="px-4 py-2 border border-white/20 text-white/60 text-sm rounded hover:border-white/40 transition-colors">
+              Cancelar
+            </button>
+          </div>
+        </div>
+
+        <div id="lista-partidos" class="space-y-2">
+          <p class="text-white/30 text-sm">Cargando partidos...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .tab-btn {
+    @apply px-5 py-3 text-sm font-medium text-white/40 border-b-2 border-transparent transition-colors;
+  }
+  .tab-btn.active {
+    @apply text-dorado border-dorado;
+  }
+  .tab-btn:hover:not(.active) {
+    @apply text-white/60;
+  }
+</style>
+
+<script>
+  import { auth, db } from '../lib/firebase.js';
+  import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+  import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc, orderBy, query } from 'firebase/firestore';
+
+  // DOM refs
+  const loginSection = document.getElementById('login-section');
+  const adminSection = document.getElementById('admin-section');
+  const loginForm = document.getElementById('login-form');
+  const loginError = document.getElementById('login-error');
+
+  // ── AUTH ──────────────────────────────────────────────
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loginSection.classList.add('hidden');
+      adminSection.classList.remove('hidden');
+      loadEquipos();
+      loadPartidos();
+    } else {
+      loginSection.classList.remove('hidden');
+      adminSection.classList.add('hidden');
+    }
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loginError.classList.add('hidden');
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-password').value;
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (err) {
+      loginError.textContent = 'Email o contraseña incorrectos';
+      loginError.classList.remove('hidden');
+    }
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+
+  // ── TABS ─────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      btn.classList.add('active');
+      document.getElementById(`tab-${btn.dataset.tab}`).classList.remove('hidden');
+    });
+  });
+
+  // ── EQUIPOS ──────────────────────────────────────────
+  let equipos = [];
+
+  async function loadEquipos() {
+    const snap = await getDocs(query(collection(db, 'equipos'), orderBy('nombre')));
+    equipos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderEquipos();
+    updateEquipoSelects();
+  }
+
+  function renderEquipos() {
+    const container = document.getElementById('lista-equipos');
+    if (equipos.length === 0) {
+      container.innerHTML = '<p class="text-white/30 text-sm">No hay equipos. Agrega el primero.</p>';
+      return;
+    }
+    container.innerHTML = equipos.map(eq => `
+      <div class="rounded-xl border border-white/10 bg-fondo-card p-4 flex items-center justify-between gap-4">
+        <div class="flex-1 min-w-0">
+          <p class="font-semibold text-white text-sm">${eq.nombre}</p>
+          <p class="text-white/35 text-xs">${eq.contacto || ''} ${eq.whatsapp ? '· ' + eq.whatsapp : ''}</p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span class="text-xs ${eq.confirmado ? 'text-emerald-400' : 'text-white/25'}">
+            ${eq.confirmado ? 'Confirmado' : 'Pendiente'}
+          </span>
+          <button onclick="toggleConfirm('${eq.id}', ${!eq.confirmado})" class="px-3 py-1 text-xs border rounded transition-colors ${eq.confirmado ? 'border-white/20 text-white/40 hover:border-red-400 hover:text-red-400' : 'border-dorado/50 text-dorado hover:bg-dorado hover:text-negro'}">
+            ${eq.confirmado ? 'Desconfirmar' : 'Confirmar'}
+          </button>
+          <button onclick="deleteEquipo('${eq.id}')" class="text-white/20 hover:text-red-400 transition-colors text-xs">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Form equipo
+  document.getElementById('btn-add-equipo').addEventListener('click', () => {
+    document.getElementById('form-equipo').classList.remove('hidden');
+  });
+  document.getElementById('btn-cancel-equipo').addEventListener('click', () => {
+    document.getElementById('form-equipo').classList.add('hidden');
+  });
+  document.getElementById('btn-save-equipo').addEventListener('click', async () => {
+    const nombre = document.getElementById('equipo-nombre').value.trim();
+    if (!nombre) return;
+    const contacto = document.getElementById('equipo-contacto').value.trim();
+    const whatsapp = document.getElementById('equipo-whatsapp').value.trim();
+    await addDoc(collection(db, 'equipos'), { nombre, contacto, whatsapp, confirmado: false });
+    document.getElementById('equipo-nombre').value = '';
+    document.getElementById('equipo-contacto').value = '';
+    document.getElementById('equipo-whatsapp').value = '';
+    document.getElementById('form-equipo').classList.add('hidden');
+    await loadEquipos();
+  });
+
+  window.toggleConfirm = async (id, val) => {
+    await updateDoc(doc(db, 'equipos', id), { confirmado: val });
+    await loadEquipos();
+  };
+  window.deleteEquipo = async (id) => {
+    if (!confirm('¿Eliminar este equipo?')) return;
+    await deleteDoc(doc(db, 'equipos', id));
+    await loadEquipos();
+  };
+
+  // ── PARTIDOS ─────────────────────────────────────────
+  let partidos = [];
+
+  async function loadPartidos() {
+    const snap = await getDocs(query(collection(db, 'partidos'), orderBy('hora')));
+    partidos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderPartidos();
+  }
+
+  function renderPartidos() {
+    const container = document.getElementById('lista-partidos');
+    if (partidos.length === 0) {
+      container.innerHTML = '<p class="text-white/30 text-sm">No hay partidos. Agrega el primero.</p>';
+      return;
+    }
+    container.innerHTML = partidos.map(p => `
+      <div class="rounded-xl border ${p.estado === 'en_curso' ? 'border-dorado/30 bg-dorado/5' : 'border-white/10 bg-fondo-card'} p-4">
+        <div class="flex items-center gap-4">
+          <div class="text-white/35 text-xs font-medium w-14 shrink-0">${p.hora}</div>
+          <div class="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-3 min-w-0">
+            <p class="font-semibold text-white text-sm text-right truncate">${p.local}</p>
+            <div class="flex items-center gap-2">
+              <input type="number" min="0" value="${p.marcador_local}" data-id="${p.id}" data-field="marcador_local"
+                class="w-12 bg-negro border border-white/20 rounded text-center text-dorado font-display text-xl py-1 focus:outline-none focus:border-dorado" />
+              <span class="text-white/30">-</span>
+              <input type="number" min="0" value="${p.marcador_visitante}" data-id="${p.id}" data-field="marcador_visitante"
+                class="w-12 bg-negro border border-white/20 rounded text-center text-dorado font-display text-xl py-1 focus:outline-none focus:border-dorado" />
+            </div>
+            <p class="font-semibold text-white text-sm text-left truncate">${p.visitante}</p>
+          </div>
+          <select data-id="${p.id}" data-field="estado" class="bg-negro border border-white/20 rounded text-xs text-white/60 px-2 py-1.5 focus:outline-none focus:border-dorado">
+            <option value="programado" ${p.estado === 'programado' ? 'selected' : ''}>Programado</option>
+            <option value="en_curso" ${p.estado === 'en_curso' ? 'selected' : ''}>En curso</option>
+            <option value="finalizado" ${p.estado === 'finalizado' ? 'selected' : ''}>Finalizado</option>
+          </select>
+          <button onclick="deletePartido('${p.id}')" class="text-white/20 hover:text-red-400 transition-colors text-xs shrink-0">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    // Listeners para cambios en marcador y estado
+    container.querySelectorAll('input[data-id], select[data-id]').forEach(el => {
+      el.addEventListener('change', async () => {
+        const id = el.dataset.id;
+        const field = el.dataset.field;
+        const value = el.type === 'number' ? parseInt(el.value) || 0 : el.value;
+        await updateDoc(doc(db, 'partidos', id), { [field]: value });
+      });
+    });
+  }
+
+  function updateEquipoSelects() {
+    const confirmados = equipos.filter(e => e.confirmado);
+    const options = '<option value="">Seleccionar equipo</option>' +
+      confirmados.map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join('');
+    document.getElementById('partido-local').innerHTML = options;
+    document.getElementById('partido-visitante').innerHTML = options;
+  }
+
+  // Form partido
+  document.getElementById('btn-add-partido').addEventListener('click', () => {
+    document.getElementById('form-partido').classList.remove('hidden');
+    updateEquipoSelects();
+  });
+  document.getElementById('btn-cancel-partido').addEventListener('click', () => {
+    document.getElementById('form-partido').classList.add('hidden');
+  });
+  document.getElementById('btn-save-partido').addEventListener('click', async () => {
+    const hora = document.getElementById('partido-hora').value;
+    const local = document.getElementById('partido-local').value;
+    const visitante = document.getElementById('partido-visitante').value;
+    if (!hora || !local || !visitante || local === visitante) {
+      alert('Selecciona hora y dos equipos distintos');
+      return;
+    }
+    await addDoc(collection(db, 'partidos'), {
+      hora, local, visitante, cancha: 'Cancha 1',
+      estado: 'programado', marcador_local: 0, marcador_visitante: 0
+    });
+    document.getElementById('form-partido').classList.add('hidden');
+    await loadPartidos();
+  });
+
+  window.deletePartido = async (id) => {
+    if (!confirm('¿Eliminar este partido?')) return;
+    await deleteDoc(doc(db, 'partidos', id));
+    await loadPartidos();
+  };
+</script>

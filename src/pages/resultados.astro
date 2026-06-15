@@ -1,15 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import torneo from '../data/torneo.json';
-import partidosData from '../data/partidos.json';
-
-const finalizados = partidosData.partidos.filter(p => p.estado === 'finalizado');
-const hayResultados = finalizados.length > 0;
-
-const porJornada = torneo.jornadas.map(j => ({
-  ...j,
-  partidos: finalizados.filter(p => p.jornada === j.numero),
-})).filter(j => j.partidos.length > 0);
 ---
 
 <Layout title="Resultados" description="Resultados de los partidos del Torneo Beneficencia de Añaña Basketball.">
@@ -18,58 +9,58 @@ const porJornada = torneo.jornadas.map(j => ({
     <div class="mb-12">
       <p class="section-label">Torneo Beneficencia 2026</p>
       <h1 class="section-title">RESULTADOS</h1>
+      <p class="text-white/40 text-sm mt-3">{torneo.fecha} · {torneo.lugar}</p>
     </div>
 
-    {!hayResultados ? (
-      <div class="card p-16 text-center">
-        <div class="font-display text-7xl text-dorado mb-6 opacity-60">PRONTO</div>
-        <p class="text-white/50 text-lg mb-2">Los resultados se publicarán a medida que se jueguen los partidos.</p>
-        <p class="text-white/30 text-sm">Revisa la programación para ver los próximos partidos.</p>
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/programacion" class="btn-outline">Ver programación</a>
-          <a href="/posiciones" class="btn-primary">Ver posiciones</a>
-        </div>
-      </div>
-    ) : (
-      <div class="space-y-12">
-        {porJornada.map(jornada => (
-          <div>
-            <div class="flex items-center gap-4 mb-6 flex-wrap">
-              <h2 class="font-display text-3xl text-white tracking-wide">
-                JORNADA {jornada.numero}
-              </h2>
-              <span class="text-white/35 text-sm">{jornada.fecha}</span>
-              <span class="text-white/25 text-xs">{jornada.partidos.length} partidos jugados</span>
-            </div>
-
-            <div class="space-y-2">
-              {jornada.partidos.map(partido => (
-                <div class="rounded-xl border bg-fondo-card border-white/8 p-4 flex items-center gap-4">
-                  <div class="text-white/35 text-xs font-medium w-14 shrink-0">{partido.hora}</div>
-
-                  <div class="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-3 min-w-0">
-                    <p class="font-semibold text-white text-sm text-right truncate">{partido.local}</p>
-                    <div class="text-center shrink-0">
-                      <span class="font-display text-2xl text-dorado leading-none tracking-wider">
-                        {partido.marcador_local} - {partido.marcador_visitante}
-                      </span>
-                    </div>
-                    <p class="font-semibold text-white text-sm text-left truncate">{partido.visitante}</p>
-                  </div>
-
-                  {partido.fase && (
-                    <div class="text-white/25 text-xs shrink-0 hidden sm:block">{partido.fase}</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        <div class="text-center pt-4">
-          <a href="/posiciones" class="btn-outline">Ver tabla de posiciones</a>
-        </div>
-      </div>
-    )}
+    <div id="lista-resultados">
+      <p class="text-white/30 text-sm">Cargando resultados...</p>
+    </div>
   </div>
 </Layout>
+
+<script>
+  import { db } from '../lib/firebase.js';
+  import { collection, getDocs } from 'firebase/firestore';
+
+  async function load() {
+    try {
+    const snap = await getDocs(collection(db, 'partidos'));
+    const finalizados = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.estado === 'finalizado').sort((a, b) => a.hora.localeCompare(b.hora));
+    const container = document.getElementById('lista-resultados');
+
+    if (finalizados.length === 0) {
+      container.innerHTML = `
+        <div class="bg-fondo-card border border-white/10 rounded-xl p-16 text-center">
+          <div class="font-display text-7xl text-dorado mb-6 opacity-60">PRONTO</div>
+          <p class="text-white/50 text-lg mb-2">Los resultados se publicarán a medida que se jueguen los partidos.</p>
+          <div class="mt-10">
+            <a href="/programacion" class="px-8 py-4 border border-white/30 text-white font-medium rounded hover:border-dorado hover:text-dorado transition-colors">Ver programación</a>
+          </div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = `
+      <p class="text-white/35 text-sm mb-6">${finalizados.length} partidos jugados</p>
+      <div class="space-y-2">
+        ${finalizados.map(p => `
+          <div class="rounded-xl border bg-fondo-card border-white/8 p-4 flex items-center gap-4">
+            <div class="text-white/35 text-xs font-medium w-14 shrink-0">${p.hora}</div>
+            <div class="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-3 min-w-0">
+              <p class="font-semibold text-white text-sm text-right truncate">${p.local}</p>
+              <div class="text-center shrink-0">
+                <span class="font-display text-2xl text-dorado leading-none tracking-wider">${p.marcador_local} - ${p.marcador_visitante}</span>
+              </div>
+              <p class="font-semibold text-white text-sm text-left truncate">${p.visitante}</p>
+            </div>
+          </div>
+        `).join('')}
+      </div>`;
+    } catch (err) {
+      document.getElementById('lista-resultados').innerHTML = `<p class="text-red-400 text-sm">Error: ${err.message}</p>`;
+      console.error('Firestore error:', err);
+    }
+  }
+
+  load();
+</script>

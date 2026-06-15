@@ -1,22 +1,3 @@
 {
-  "grupos": [
-    {
-      "nombre": "GRUPO A",
-      "equipos": [
-        { "nombre": "Añaña Basketball", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 1", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 2", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 3", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 }
-      ]
-    },
-    {
-      "nombre": "GRUPO B",
-      "equipos": [
-        { "nombre": "Equipo 4", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 5", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 6", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 },
-        { "nombre": "Equipo 7", "pj": 0, "ganados": 0, "perdidos": 0, "diferencia": 0, "puntos": 0 }
-      ]
-    }
-  ]
+  "grupos": []
 }

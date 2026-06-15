@@ -1,13 +1,12 @@
 {
   "nombre": "Torneo Beneficencia",
   "organizador": "Añaña Basketball",
-  "cupos_totales": 8,
+  "cupos_totales": 14,
+  "max_partidos": 7,
+  "fecha": "Sábado 4 de Julio 2026",
   "lugar": "Santiago, Chile",
+  "descripcion": "Jornada de partidos amistosos para recaudar fondos para el equipo Añaña Basketball. Cada equipo juega un partido.",
   "contacto_instagram": "@anana_basketball",
   "contacto_whatsapp": "",
-  "jornadas": [
-    { "numero": 1, "fecha": "12-14 Jun 2026", "estado": "en_curso" },
-    { "numero": 2, "fecha": "19-21 Jun 2026", "estado": "proximamente" },
-    { "numero": 3, "fecha": "26-28 Jun 2026", "estado": "proximamente" }
-  ]
+  "nota_impar": "Si la cantidad de equipos es impar, Añaña juega dos partidos."
 }

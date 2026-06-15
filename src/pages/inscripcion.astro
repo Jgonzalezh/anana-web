@@ -1,202 +1,145 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import torneo from '../data/torneo.json';
-import equipos from '../data/equipos.json';
-
-const confirmados = equipos.filter(e => e.confirmado).length;
-const cuposLibres = torneo.cupos_totales - confirmados;
 ---
 
-<Layout
-  title="Inscripción"
-  description="Inscribe tu equipo en el Torneo Beneficencia de Añaña Basketball. Cupos limitados."
->
+<Layout title="Inscripción" description="Inscribe tu equipo en el Torneo Beneficencia de Añaña Basketball. Cupos limitados.">
   <div class="pt-24 pb-20">
     <div class="max-w-2xl mx-auto px-4">
 
-      <!-- Header -->
       <div class="text-center mb-10">
         <p class="section-label">Únete al torneo</p>
         <h1 class="font-display text-5xl md:text-6xl text-white tracking-wide mb-4">
           INSCRIPCIÓN <span class="text-dorado">DE EQUIPOS</span>
         </h1>
+        <p class="text-white/40 text-sm mb-4">{torneo.fecha} · {torneo.lugar}</p>
         <div class="flex justify-center items-center gap-3">
-          <div class={`flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium ${
-            cuposLibres > 0
-              ? 'border-dorado/50 bg-dorado/10 text-dorado'
-              : 'border-red-500/50 bg-red-500/10 text-red-400'
-          }`}>
-            {cuposLibres > 0
-              ? `${cuposLibres} cupos disponibles de ${torneo.cupos_totales}`
-              : 'Sin cupos disponibles'}
+          <div id="badge-cupos" class="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium border-dorado/50 bg-dorado/10 text-dorado">
+            Cargando cupos...
           </div>
         </div>
       </div>
 
-      {cuposLibres <= 0 ? (
-        <div class="card p-10 text-center">
-          <div class="font-display text-5xl text-dorado mb-4">LLENO</div>
-          <p class="text-white/60 mb-6">Los cupos del torneo están completos.</p>
-          <p class="text-white/40 text-sm">Escríbenos a Instagram para quedar en lista de espera.</p>
-          <a
-            href="https://instagram.com"
-            class="inline-block mt-6 px-6 py-3 border border-dorado text-dorado rounded-lg hover:bg-dorado hover:text-negro transition-colors font-medium"
-          >
-            @anana_basketball
-          </a>
+      <!-- FORMULARIO -->
+      <form
+        id="form-inscripcion"
+        name="inscripcion-equipo"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        class="card p-6 md:p-8 space-y-6"
+      >
+        <input type="hidden" name="form-name" value="inscripcion-equipo" />
+        <p class="hidden"><label>No completar: <input name="bot-field" /></label></p>
+
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Nombre del equipo <span class="text-dorado">*</span></label>
+          <input type="text" name="nombre_equipo" required placeholder="ej. Los Cóndores" class="input-field" />
         </div>
-      ) : (
-        <form
-          name="inscripcion-equipo"
-          method="POST"
-          action="/gracias"
-          data-netlify="true"
-          netlify-honeypot="bot-field"
-          class="card p-6 md:p-8 space-y-6"
-        >
-          <input type="hidden" name="form-name" value="inscripcion-equipo" />
-          <p class="hidden">
-            <label>No completar: <input name="bot-field" /></label>
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Nombre del capitán / contacto <span class="text-dorado">*</span></label>
+          <input type="text" name="capitan" required placeholder="Tu nombre completo" class="input-field" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">WhatsApp <span class="text-dorado">*</span></label>
+          <input type="tel" name="whatsapp" required placeholder="+56 9 XXXX XXXX" class="input-field" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Email <span class="text-white/30">(opcional)</span></label>
+          <input type="email" name="email" placeholder="capitan@equipo.cl" class="input-field" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-white/60 mb-2">Notas adicionales</label>
+          <textarea name="notas" rows="3" placeholder="Cualquier información sobre el equipo, experiencia, etc." class="input-field resize-none"></textarea>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" id="btn-submit" class="w-full py-4 bg-dorado text-negro font-bold text-lg rounded-lg hover:bg-dorado-claro transition-all hover:scale-[1.01] shadow-lg shadow-dorado/20">
+            INSCRIBIR EQUIPO
+          </button>
+          <p id="form-error" class="text-red-400 text-sm text-center mt-3 hidden"></p>
+          <p class="text-white/35 text-xs text-center mt-4 leading-relaxed">
+            Te contactaremos por WhatsApp para confirmar y coordinar los detalles.
           </p>
+        </div>
+      </form>
 
-          <!-- Nombre del equipo -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              Nombre del equipo <span class="text-dorado">*</span>
-            </label>
-            <input
-              type="text"
-              name="nombre_equipo"
-              required
-              placeholder="ej. Los Cóndores"
-              class="input-field"
-            />
+      <!-- MENSAJE DE ÉXITO -->
+      <div id="exito" class="hidden">
+        <div class="max-w-xl mx-auto text-center">
+          <div class="w-20 h-20 bg-dorado/15 border border-dorado/30 rounded-full flex items-center justify-center mx-auto mb-8">
+            <svg class="w-10 h-10 text-dorado" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
           </div>
+          <p class="section-label">Inscripción recibida</p>
+          <h2 class="font-display text-5xl md:text-6xl text-white tracking-wide mb-4">TODO <span class="text-dorado">LISTO</span></h2>
+          <p class="text-white/55 text-lg mb-8 leading-relaxed">
+            Recibimos tu inscripción. Te contactaremos por WhatsApp en las próximas horas para confirmar los detalles del torneo.
+          </p>
+          <div class="card p-6 text-left space-y-3 mb-10">
+            <p class="text-white/40 text-sm font-medium uppercase tracking-wider mb-4">Próximos pasos</p>
+            <div class="flex items-start gap-3"><span class="font-display text-dorado text-lg leading-tight shrink-0">1</span><span class="text-white/65 text-sm leading-relaxed">Te contactamos por WhatsApp para confirmar el cupo</span></div>
+            <div class="flex items-start gap-3"><span class="font-display text-dorado text-lg leading-tight shrink-0">2</span><span class="text-white/65 text-sm leading-relaxed">Coordinamos los detalles del partido</span></div>
+            <div class="flex items-start gap-3"><span class="font-display text-dorado text-lg leading-tight shrink-0">3</span><span class="text-white/65 text-sm leading-relaxed">Publicamos el fixture con todos los equipos</span></div>
+            <div class="flex items-start gap-3"><span class="font-display text-dorado text-lg leading-tight shrink-0">4</span><span class="text-white/65 text-sm leading-relaxed">¡A jugar!</span></div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="/equipos" class="btn-outline text-base">Ver equipos inscritos</a>
+            <a href="/" class="btn-primary text-base">Volver al inicio</a>
+          </div>
+        </div>
+      </div>
 
-          <!-- Capitán -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              Nombre del capitán / contacto <span class="text-dorado">*</span>
-            </label>
-            <input
-              type="text"
-              name="capitan"
-              required
-              placeholder="Tu nombre completo"
-              class="input-field"
-            />
-          </div>
-
-          <!-- WhatsApp -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              WhatsApp <span class="text-dorado">*</span>
-            </label>
-            <input
-              type="tel"
-              name="whatsapp"
-              required
-              placeholder="+56 9 XXXX XXXX"
-              class="input-field"
-            />
-          </div>
-
-          <!-- Email -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              Email <span class="text-white/30">(opcional)</span>
-            </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="capitan@equipo.cl"
-              class="input-field"
-            />
-          </div>
-
-          <!-- Cantidad jugadores -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              Cantidad de jugadores <span class="text-dorado">*</span>
-            </label>
-            <input
-              type="number"
-              name="cantidad_jugadores"
-              required
-              min="5"
-              max="15"
-              placeholder="ej. 10"
-              class="input-field"
-            />
-          </div>
-
-          <!-- Disponibilidad -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-3">
-              ¿Algún fin de semana <strong class="text-white">NO</strong> pueden participar?
-            </label>
-            <div class="space-y-2.5">
-              {torneo.jornadas.map(j => (
-                <label class="flex items-center gap-3 cursor-pointer group">
-                  <input
-                    type="checkbox"
-                    name="no_disponible"
-                    value={`Jornada ${j.numero} - ${j.fecha}`}
-                    class="w-4 h-4 rounded border-white/30 bg-negro text-dorado focus:ring-dorado focus:ring-offset-negro"
-                    style="accent-color: #C9A84C"
-                  />
-                  <span class="text-white/60 group-hover:text-white transition-colors text-sm">
-                    Jornada {j.numero} &middot; {j.fecha}
-                    {j.estado === 'en_curso' && (
-                      <span class="ml-2 text-dorado text-xs">(en curso)</span>
-                    )}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <!-- Como se enteraron -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              ¿Cómo se enteraron del torneo?
-            </label>
-            <select name="como_se_enteraron" class="input-field">
-              <option value="" class="bg-negro">Seleccionar...</option>
-              <option value="instagram" class="bg-negro">Instagram</option>
-              <option value="conocido" class="bg-negro">Por un conocido</option>
-              <option value="otro_equipo" class="bg-negro">Otro equipo</option>
-              <option value="otro" class="bg-negro">Otro</option>
-            </select>
-          </div>
-
-          <!-- Notas -->
-          <div>
-            <label class="block text-sm font-medium text-white/60 mb-2">
-              Notas adicionales
-            </label>
-            <textarea
-              name="notas"
-              rows="3"
-              placeholder="Cualquier información sobre el equipo, experiencia, etc."
-              class="input-field resize-none"
-            ></textarea>
-          </div>
-
-          <!-- Submit -->
-          <div class="pt-2">
-            <button
-              type="submit"
-              class="w-full py-4 bg-dorado text-negro font-bold text-lg rounded-lg hover:bg-dorado-claro transition-all hover:scale-[1.01] shadow-lg shadow-dorado/20"
-            >
-              INSCRIBIR EQUIPO
-            </button>
-            <p class="text-white/35 text-xs text-center mt-4 leading-relaxed">
-              Te contactaremos por WhatsApp para confirmar y coordinar los detalles del torneo.
-            </p>
-          </div>
-        </form>
-      )}
     </div>
   </div>
 </Layout>
+
+<script>
+  import { db } from '../lib/firebase.js';
+  import { collection, getDocs } from 'firebase/firestore';
+
+  const CUPOS = 14;
+
+  async function loadCupos() {
+    const snap = await getDocs(collection(db, 'equipos'));
+    const confirmados = snap.docs.filter(d => d.data().confirmado).length;
+    const cuposLibres = CUPOS - confirmados;
+    const badge = document.getElementById('badge-cupos');
+    if (cuposLibres > 0) {
+      badge.textContent = `${cuposLibres} cupos disponibles de ${CUPOS}`;
+      badge.className = 'flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium border-dorado/50 bg-dorado/10 text-dorado';
+    } else {
+      badge.textContent = 'Sin cupos disponibles';
+      badge.className = 'flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium border-red-500/50 bg-red-500/10 text-red-400';
+    }
+  }
+
+  loadCupos();
+
+  const form = document.getElementById('form-inscripcion');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit');
+    const errorEl = document.getElementById('form-error');
+    btn.textContent = 'ENVIANDO...';
+    btn.disabled = true;
+    errorEl.classList.add('hidden');
+
+    try {
+      const formData = new FormData(form);
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      });
+      form.classList.add('hidden');
+      document.getElementById('exito').classList.remove('hidden');
+    } catch (err) {
+      errorEl.textContent = 'Error al enviar. Intenta de nuevo.';
+      errorEl.classList.remove('hidden');
+      btn.textContent = 'INSCRIBIR EQUIPO';
+      btn.disabled = false;
+    }
+  });
+</script>
