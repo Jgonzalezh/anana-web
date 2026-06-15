@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+import torneo from '../data/torneo.json';
+import partidosData from '../data/partidos.json';
+
+const partidos = partidosData.partidos;
+const hayFixture = partidos.length > 0;
+
+// Agrupar por jornada
+const porJornada = torneo.jornadas.map(j => ({
+  ...j,
+  partidos: partidos.filter(p => p.jornada === j.numero),
+}));
+---
+
+<Layout title="Programación" description="Fixture y programación del Torneo Beneficencia de Añaña Basketball.">
+  <div class="pt-24 pb-20 max-w-5xl mx-auto px-4">
+
+    <div class="mb-12">
+      <p class="section-label">Torneo Beneficencia 2026</p>
+      <h1 class="section-title">PROGRAMACIÓN</h1>
+    </div>
+
+    {!hayFixture ? (
+      <!-- Placeholder -->
+      <div class="card p-16 text-center">
+        <div class="font-display text-7xl text-dorado mb-6 opacity-60">PRONTO</div>
+        <p class="text-white/50 text-lg mb-2">El fixture se publicará una vez confirmados todos los equipos.</p>
+        <p class="text-white/30 text-sm">Inscríbete ahora para asegurar tu cupo.</p>
+        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/equipos" class="btn-outline">Ver equipos inscritos</a>
+          <a href="/inscripcion" class="btn-primary">Inscribir equipo</a>
+        </div>
+      </div>
+    ) : (
+      <!-- Fixture real -->
+      <div class="space-y-12">
+        {porJornada.map(jornada => (
+          <div>
+            <div class="flex items-center gap-4 mb-6 flex-wrap">
+              <h2 class="font-display text-3xl text-white tracking-wide">
+                JORNADA {jornada.numero}
+              </h2>
+              <span class="text-white/35 text-sm">{jornada.fecha}</span>
+              {jornada.estado === 'en_curso' && (
+                <span class="flex items-center gap-1.5 bg-dorado/15 text-dorado text-xs px-3 py-1 rounded-full border border-dorado/30">
+                  <span class="w-1.5 h-1.5 bg-dorado rounded-full animate-pulse"></span>
+                  En curso
+                </span>
+              )}
+            </div>
+
+            {jornada.partidos.length === 0 ? (
+              <p class="text-white/25 text-sm pl-1">Pendiente de programación</p>
+            ) : (
+              <div class="space-y-2">
+                {jornada.partidos.map(partido => (
+                  <div class={`rounded-xl border p-4 flex items-center gap-4 transition-colors ${
+                    partido.estado === 'finalizado'
+                      ? 'bg-fondo-card border-white/8'
+                      : partido.estado === 'en_curso'
+                      ? 'bg-dorado/5 border-dorado/30'
+                      : 'bg-fondo-card border-white/10'
+                  }`}>
+                    <!-- Hora -->
+                    <div class="text-white/35 text-xs font-medium w-14 shrink-0">{partido.hora}</div>
+
+                    <!-- Partido -->
+                    <div class="flex-1 grid grid-cols-[1fr_auto_1fr] items-center gap-3 min-w-0">
+                      <p class="font-semibold text-white text-sm text-right truncate">{partido.local}</p>
+                      <div class="text-center shrink-0">
+                        {partido.estado === 'finalizado' ? (
+                          <span class="font-display text-2xl text-dorado leading-none tracking-wider">
+                            {partido.marcador_local} - {partido.marcador_visitante}
+                          </span>
+                        ) : partido.estado === 'en_curso' ? (
+                          <span class="font-display text-xl text-dorado/70 leading-none">
+                            {partido.marcador_local ?? 0} - {partido.marcador_visitante ?? 0}
+                          </span>
+                        ) : (
+                          <span class="text-white/30 text-xs font-medium tracking-widest">VS</span>
+                        )}
+                      </div>
+                      <p class="font-semibold text-white text-sm text-left truncate">{partido.visitante}</p>
+                    </div>
+
+                    <!-- Cancha -->
+                    {partido.cancha && (
+                      <div class="text-white/25 text-xs shrink-0 hidden sm:block">{partido.cancha}</div>
+                    )}
+
+                    <!-- Estado badge -->
+                    {partido.estado === 'en_curso' && (
+                      <span class="flex items-center gap-1 text-dorado text-xs shrink-0">
+                        <span class="w-1.5 h-1.5 bg-dorado rounded-full animate-pulse"></span>
+                        Jugando
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

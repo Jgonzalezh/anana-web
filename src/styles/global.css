@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #080c17; }
+  ::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+
+  ::selection { background: #C9A84C; color: #080c17; }
+}
+
+@layer components {
+  .input-field {
+    @apply w-full bg-negro border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-dorado transition-colors;
+  }
+  .btn-primary {
+    @apply px-8 py-4 bg-dorado text-negro font-bold rounded hover:bg-dorado-claro transition-all hover:scale-105 shadow-lg shadow-dorado/20;
+  }
+  .btn-outline {
+    @apply px-8 py-4 border border-white/30 text-white font-medium rounded hover:border-dorado hover:text-dorado transition-colors;
+  }
+  .card {
+    @apply bg-fondo-card border border-white/10 rounded-xl hover:border-dorado/30 transition-colors;
+  }
+  .section-label {
+    @apply text-dorado text-sm font-semibold tracking-[0.3em] uppercase mb-3;
+  }
+  .section-title {
+    @apply font-display text-5xl md:text-6xl text-white tracking-wide;
+  }
+}

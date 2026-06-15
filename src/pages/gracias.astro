@@ -1,0 +1,48 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Inscripción recibida" description="Tu inscripción fue recibida correctamente.">
+  <div class="pt-24 pb-20 min-h-screen flex items-center">
+    <div class="max-w-xl mx-auto px-4 text-center">
+      <!-- Icono check -->
+      <div class="w-20 h-20 bg-dorado/15 border border-dorado/30 rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg class="w-10 h-10 text-dorado" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <p class="section-label">Inscripción recibida</p>
+      <h1 class="font-display text-5xl md:text-6xl text-white tracking-wide mb-4">
+        TODO <span class="text-dorado">LISTO</span>
+      </h1>
+      <p class="text-white/55 text-lg mb-8 leading-relaxed">
+        Recibimos tu inscripción. Te contactaremos por WhatsApp en las próximas horas para confirmar los detalles del torneo.
+      </p>
+
+      <div class="card p-6 text-left space-y-3 mb-10">
+        <p class="text-white/40 text-sm font-medium uppercase tracking-wider mb-4">Próximos pasos</p>
+        {[
+          'Te contactamos por WhatsApp para confirmar el cupo',
+          'Coordinamos disponibilidad para las jornadas',
+          'Publicamos el fixture cuando tengamos todos los equipos',
+          'A jugar!',
+        ].map((paso, i) => (
+          <div class="flex items-start gap-3">
+            <span class="font-display text-dorado text-lg leading-tight shrink-0">{i + 1}</span>
+            <span class="text-white/65 text-sm leading-relaxed">{paso}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/equipos" class="btn-outline text-base">
+          Ver equipos inscritos
+        </a>
+        <a href="/" class="btn-primary text-base">
+          Volver al inicio
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>

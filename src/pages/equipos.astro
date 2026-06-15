@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+import torneo from '../data/torneo.json';
+import equipos from '../data/equipos.json';
+
+const confirmados = equipos.filter(e => e.confirmado);
+const cuposLibres = torneo.cupos_totales - confirmados.length;
+const porcentaje = Math.round((confirmados.length / torneo.cupos_totales) * 100);
+---
+
+<Layout title="Equipos" description="Equipos inscritos en el Torneo Beneficencia de Añaña Basketball.">
+  <div class="pt-24 pb-20 max-w-6xl mx-auto px-4">
+
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="section-label">Torneo Beneficencia 2026</p>
+      <h1 class="font-display text-5xl md:text-6xl text-white tracking-wide">
+        EQUIPOS <span class="text-dorado">INSCRITOS</span>
+      </h1>
+      <div class="mt-5 flex flex-col sm:flex-row sm:items-center gap-4">
+        <!-- Barra de progreso -->
+        <div class="flex-1 max-w-xs">
+          <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-dorado rounded-full transition-all"
+              style={`width: ${porcentaje}%`}
+            ></div>
+          </div>
+          <p class="text-white/40 text-xs mt-2">
+            {confirmados.length} de {torneo.cupos_totales} equipos confirmados
+          </p>
+        </div>
+        {cuposLibres > 0 && (
+          <a href="/inscripcion" class="inline-flex items-center gap-2 text-dorado hover:text-dorado-claro text-sm font-medium transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            {cuposLibres} cupos disponibles
+          </a>
+        )}
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      {confirmados.map((equipo, i) => (
+        <div class="card border-dorado/20 p-6 flex flex-col items-center text-center">
+          <!-- Avatar con inicial -->
+          <div class="w-16 h-16 bg-gradient-to-br from-marino to-marino-claro rounded-xl flex items-center justify-center mb-4 shadow-lg">
+            <span class="font-display text-dorado text-2xl leading-none">
+              {equipo.nombre.charAt(0).toUpperCase()}
+            </span>
+          </div>
+          <p class="font-semibold text-white text-sm leading-tight mb-1">{equipo.nombre}</p>
+          {equipo.jugadores && (
+            <p class="text-white/35 text-xs">{equipo.jugadores} jugadores</p>
+          )}
+          <div class="mt-3 flex items-center gap-1.5">
+            {equipo.es_organizador ? (
+              <span class="text-xs text-dorado/60 border border-dorado/20 rounded-full px-2.5 py-0.5">
+                Organizador
+              </span>
+            ) : (
+              <span class="flex items-center gap-1 text-xs text-emerald-400/70">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full"></span>
+                Confirmado
+              </span>
+            )}
+          </div>
+        </div>
+      ))}
+
+      {/* Cupos libres */}
+      {Array.from({ length: cuposLibres }).map(() => (
+        <a
+          href="/inscripcion"
+          class="border border-dashed border-white/10 rounded-xl p-6 flex flex-col items-center text-center hover:border-dorado/25 transition-colors group"
+        >
+          <div class="w-16 h-16 bg-white/4 rounded-xl flex items-center justify-center mb-4 group-hover:bg-dorado/8 transition-colors">
+            <svg class="w-6 h-6 text-white/15 group-hover:text-dorado/35 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <p class="text-white/20 text-sm group-hover:text-white/40 transition-colors">Cupo disponible</p>
+          <p class="text-dorado/0 group-hover:text-dorado/60 text-xs mt-1 transition-colors font-medium">
+            Inscribirse →
+          </p>
+        </a>
+      ))}
+    </div>
+
+    {/* Banner si hay cupos */}
+    {cuposLibres > 0 && (
+      <div class="mt-12 bg-gradient-to-r from-marino/30 to-negro border border-dorado/15 rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <p class="font-display text-3xl text-white tracking-wide">
+            QUEDAN <span class="text-dorado">{cuposLibres}</span> CUPOS
+          </p>
+          <p class="text-white/40 text-sm mt-1">No te quedes afuera del torneo.</p>
+        </div>
+        <a href="/inscripcion" class="btn-primary shrink-0">
+          INSCRIBIR EQUIPO
+        </a>
+      </div>
+    )}
+  </div>
+</Layout>

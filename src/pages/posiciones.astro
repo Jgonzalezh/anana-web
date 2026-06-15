@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import posicionesData from '../data/posiciones.json';
+
+const hayDatos = posicionesData.grupos.length > 0;
+---
+
+<Layout title="Posiciones" description="Tabla de posiciones del Torneo Beneficencia de Añaña Basketball.">
+  <div class="pt-24 pb-20 max-w-5xl mx-auto px-4">
+
+    <div class="mb-12">
+      <p class="section-label">Torneo Beneficencia 2026</p>
+      <h1 class="section-title">
+        TABLA DE <span class="text-dorado">POSICIONES</span>
+      </h1>
+    </div>
+
+    {!hayDatos ? (
+      <div class="card p-16 text-center">
+        <div class="font-display text-7xl text-dorado mb-6 opacity-60">PRONTO</div>
+        <p class="text-white/50 text-lg mb-2">Las posiciones se actualizarán al comenzar la competencia.</p>
+        <p class="text-white/30 text-sm">Revisa la programación para ver los partidos.</p>
+        <div class="mt-10">
+          <a href="/programacion" class="btn-outline">Ver programación</a>
+        </div>
+      </div>
+    ) : (
+      <div class="space-y-10">
+        {posicionesData.grupos.map(grupo => (
+          <div>
+            <h2 class="font-display text-2xl text-dorado tracking-wide mb-4">{grupo.nombre}</h2>
+            <div class="card overflow-hidden">
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-white/10">
+                      <th class="text-left py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">#</th>
+                      <th class="text-left py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">Equipo</th>
+                      <th class="text-center py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">PJ</th>
+                      <th class="text-center py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">G</th>
+                      <th class="text-center py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">P</th>
+                      <th class="text-center py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">+/-</th>
+                      <th class="text-center py-3 px-4 text-white/35 text-xs font-medium uppercase tracking-wider">Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {grupo.equipos.map((equipo, i) => (
+                      <tr class={`border-b border-white/5 hover:bg-white/4 transition-colors ${
+                        i === 0 ? 'bg-dorado/5' : ''
+                      }`}>
+                        <td class="py-3 px-4">
+                          <span class={`font-display text-lg leading-none ${i === 0 ? 'text-dorado' : 'text-white/30'}`}>
+                            {i + 1}
+                          </span>
+                        </td>
+                        <td class="py-3 px-4">
+                          <span class="font-semibold text-white text-sm">{equipo.nombre}</span>
+                        </td>
+                        <td class="py-3 px-4 text-center text-white/50 text-sm">{equipo.pj}</td>
+                        <td class="py-3 px-4 text-center text-white/50 text-sm">{equipo.ganados}</td>
+                        <td class="py-3 px-4 text-center text-white/50 text-sm">{equipo.perdidos}</td>
+                        <td class="py-3 px-4 text-center text-sm">
+                          <span class={equipo.diferencia > 0 ? 'text-emerald-400' : equipo.diferencia < 0 ? 'text-red-400' : 'text-white/50'}>
+                            {equipo.diferencia > 0 ? '+' : ''}{equipo.diferencia}
+                          </span>
+                        </td>
+                        <td class="py-3 px-4 text-center">
+                          <span class="font-bold text-dorado text-sm">{equipo.puntos}</span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

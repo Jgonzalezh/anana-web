@@ -1,0 +1,21 @@
+{
+  "partidos": [
+    { "id": 1,  "jornada": 1, "hora": "10:00", "local": "Añaña Basketball", "visitante": "Equipo 1", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 2,  "jornada": 1, "hora": "11:30", "local": "Equipo 4", "visitante": "Equipo 5", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+    { "id": 3,  "jornada": 1, "hora": "13:00", "local": "Equipo 2", "visitante": "Equipo 3", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 4,  "jornada": 1, "hora": "14:30", "local": "Equipo 6", "visitante": "Equipo 7", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+
+    { "id": 5,  "jornada": 2, "hora": "10:00", "local": "Añaña Basketball", "visitante": "Equipo 2", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 6,  "jornada": 2, "hora": "11:30", "local": "Equipo 4", "visitante": "Equipo 6", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+    { "id": 7,  "jornada": 2, "hora": "13:00", "local": "Equipo 1", "visitante": "Equipo 3", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 8,  "jornada": 2, "hora": "14:30", "local": "Equipo 5", "visitante": "Equipo 7", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+
+    { "id": 9,  "jornada": 3, "hora": "10:00", "local": "Añaña Basketball", "visitante": "Equipo 3", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 10, "jornada": 3, "hora": "11:30", "local": "Equipo 4", "visitante": "Equipo 7", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+    { "id": 11, "jornada": 3, "hora": "13:00", "local": "Equipo 1", "visitante": "Equipo 2", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo A" },
+    { "id": 12, "jornada": 3, "hora": "14:30", "local": "Equipo 5", "visitante": "Equipo 6", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Grupo B" },
+    { "id": 13, "jornada": 3, "hora": "16:00", "local": "1° Grupo A", "visitante": "2° Grupo B", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Semifinal" },
+    { "id": 14, "jornada": 3, "hora": "17:30", "local": "1° Grupo B", "visitante": "2° Grupo A", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Semifinal" },
+    { "id": 15, "jornada": 3, "hora": "19:00", "local": "Ganador SF1", "visitante": "Ganador SF2", "cancha": "Cancha 1", "estado": "programado", "marcador_local": 0, "marcador_visitante": 0, "fase": "Final" }
+  ]
+}
