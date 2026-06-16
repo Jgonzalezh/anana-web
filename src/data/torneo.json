@@ -1,6 +1,6 @@
 {
   "nombre": "Torneo Beneficencia",
-  "organizador": "Añaña Basketball",
+  "organizador": "Añaña Club Deportivo",
   "beneficiario": "Camilo Inostroza",
   "causa": "Operación de rodilla",
   "cupos_totales": 14,
@@ -10,7 +10,7 @@
   "fecha": "Sábado 4 de Julio 2026",
   "lugar": "Santiago, Chile",
   "descripcion": "Torneo a beneficio de Camilo Inostroza para ayudarlo con su operación de rodilla. Todo lo recaudado va directo a cubrir los gastos médicos.",
-  "contacto_instagram": "@anana_basketball",
+  "contacto_instagram": "@anana.bc",
   "contacto_whatsapp": "",
   "nota_impar": "Si la cantidad de equipos es impar, Añaña juega dos partidos."
 }
