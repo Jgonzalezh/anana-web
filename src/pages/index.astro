@@ -17,8 +17,9 @@ import torneo from '../data/torneo.json';
         <span class="block text-white" style="font-size: clamp(4rem, 14vw, 10rem); letter-spacing: 0.05em;">TORNEO</span>
         <span class="block text-dorado" style="font-size: clamp(3rem, 12vw, 9rem); letter-spacing: 0.05em;">BENEFICENCIA</span>
       </h1>
-      <p class="text-white/50 text-lg md:text-xl mt-6">Partidos amistosos · {torneo.fecha} · {torneo.lugar}</p>
+      <p class="text-white/50 text-lg md:text-xl mt-6">A beneficio de <span class="text-dorado font-semibold">Camilo Inostroza</span></p>
       <p class="text-white/35 text-sm mt-3 max-w-lg mx-auto">{torneo.descripcion}</p>
+      <p class="text-white/40 text-sm mt-2">{torneo.fecha} · {torneo.lugar}</p>
 
       <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
         <a href="/inscripcion" class="btn-primary text-lg">INSCRIBE TU EQUIPO</a>
@@ -43,19 +44,23 @@ import torneo from '../data/torneo.json';
   <section class="max-w-6xl mx-auto px-4 py-20">
     <div class="grid md:grid-cols-3 gap-5">
       <div class="card p-7">
-        <div class="font-display text-5xl text-dorado mb-3 leading-none">1</div>
-        <h3 class="font-semibold text-white text-lg mb-2">Día completo</h3>
-        <p class="text-white/45 text-sm leading-relaxed">{torneo.fecha}. Una jornada de basketball amistoso para recaudar fondos.</p>
+        <div class="font-display text-5xl text-dorado mb-3 leading-none">$25k</div>
+        <h3 class="font-semibold text-white text-lg mb-2">Por equipo</h3>
+        <p class="text-white/45 text-sm leading-relaxed">$25.000 por partido. Todo va a beneficio de la operación de Camilo.</p>
       </div>
       <div class="card p-7">
-        <div class="font-display text-5xl text-dorado mb-3 leading-none" id="info-equipos">14</div>
-        <h3 class="font-semibold text-white text-lg mb-2">Equipos</h3>
-        <p class="text-white/45 text-sm leading-relaxed">Partidos amistosos entre los equipos inscritos. ¡Ven a competir y apoyar!</p>
+        <div class="font-display text-5xl text-dorado mb-3 leading-none">$1k</div>
+        <h3 class="font-semibold text-white text-lg mb-2">Entrada público</h3>
+        <p class="text-white/45 text-sm leading-relaxed">$1.000 adultos. Ven a apoyar y disfrutar de una jornada de basketball.</p>
       </div>
       <div class="card p-7">
-        <div class="font-display text-5xl text-dorado mb-3 leading-none">#</div>
-        <h3 class="font-semibold text-white text-lg mb-2">Beneficencia</h3>
-        <p class="text-white/45 text-sm leading-relaxed">Lo recaudado va directo al equipamiento, cancha y gastos del equipo Añaña Basketball.</p>
+        <div class="w-12 h-12 bg-dorado/15 border border-dorado/30 rounded-full flex items-center justify-center mb-3">
+          <svg class="w-6 h-6 text-dorado" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </div>
+        <h3 class="font-semibold text-white text-lg mb-2">100% Beneficencia</h3>
+        <p class="text-white/45 text-sm leading-relaxed">Todo lo recaudado va directo a la operación de rodilla de Camilo Inostroza.</p>
       </div>
     </div>
   </section>
@@ -78,8 +83,8 @@ import torneo from '../data/torneo.json';
   <section class="relative overflow-hidden bg-gradient-to-r from-marino/40 via-negro to-negro border-y border-dorado/15 py-20">
     <div class="absolute inset-0 opacity-[0.03]" style="background-image: repeating-linear-gradient(-45deg, #C9A84C 0px, #C9A84C 1px, transparent 1px, transparent 40px)"></div>
     <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
-      <h2 class="font-display text-5xl md:text-7xl text-white tracking-wide mb-4">¿LISTO PARA <span class="text-dorado">COMPETIR?</span></h2>
-      <p class="text-white/50 mb-8 text-lg max-w-xl mx-auto">Inscribe tu equipo antes de que se agoten los cupos.</p>
+      <h2 class="font-display text-5xl md:text-7xl text-white tracking-wide mb-4">¿LISTO PARA <span class="text-dorado">AYUDAR?</span></h2>
+      <p class="text-white/50 mb-8 text-lg max-w-xl mx-auto">Inscribe tu equipo y ayuda a Camilo con su operación. $25.000 por partido.</p>
       <a href="/inscripcion" class="btn-primary text-xl">INSCRIBIRSE AHORA</a>
     </div>
   </section>
@@ -99,7 +104,6 @@ import torneo from '../data/torneo.json';
     const cuposLibres = CUPOS - confirmados.length;
 
     document.getElementById('hero-cupos').textContent = cuposLibres;
-    document.getElementById('info-equipos').textContent = CUPOS;
 
     const grid = document.getElementById('grid-equipos');
     let html = confirmados.map(eq => `

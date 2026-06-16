@@ -1,11 +1,15 @@
 {
   "nombre": "Torneo Beneficencia",
   "organizador": "Añaña Basketball",
+  "beneficiario": "Camilo Inostroza",
+  "causa": "Operación de rodilla",
   "cupos_totales": 14,
   "max_partidos": 7,
+  "costo_equipo": 25000,
+  "entrada_adulto": 1000,
   "fecha": "Sábado 4 de Julio 2026",
   "lugar": "Santiago, Chile",
-  "descripcion": "Jornada de partidos amistosos para recaudar fondos para el equipo Añaña Basketball. Cada equipo juega un partido.",
+  "descripcion": "Torneo a beneficio de Camilo Inostroza para ayudarlo con su operación de rodilla. Todo lo recaudado va directo a cubrir los gastos médicos.",
   "contacto_instagram": "@anana_basketball",
   "contacto_whatsapp": "",
   "nota_impar": "Si la cantidad de equipos es impar, Añaña juega dos partidos."
